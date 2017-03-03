@@ -1,5 +1,5 @@
 <?php
-function logging($logType="", $message="", $infoType=""){
+function logging($logType="", $message="", $infoType="Info"){
 	include_once "../Logging/LogsFunctions.php";
 	switch($logType){
 		case 1:

@@ -1,18 +1,21 @@
 <?php
   session_start();
   if(!isset($_SESSION['username'])){
-    header('Location: login.php');
+    header('Location: ../login.php');
   }
+  include('../index.php');
 ?>
 <form class="" action="usersearch.php" method="post">
-  <label for="username">User Name</label>
-  <input type="text" name="username" value="">
-  <button type="submit" name="button">Search</button>
+	<div class="form-group">
+  		<label for="username">User Name</label>
+  		<input class="form-control" type="text" name="username" value="">
+	</div>
+  <button class="btn btn-primary" type="submit" name="button">Search</button>
 </form>
 <?php
 if($_POST['username']){
   $userName = $_POST['username'];
-  echo $userName;
+  //echo $userName;
   $db = mysqli_connect( "localhost" , "root" , "root" , "authdb" );
   if(mysqli_connect_errno($db)){
     echo "error while connecting to db";
@@ -20,22 +23,22 @@ if($_POST['username']){
   }else{
     $query = "SELECT * FROM users WHERE user_name LIKE '%$userName%'";
     $result = mysqli_query($db,$query);
-    if(isset($result)){
-      $numOfUsers = mysqli_num_rows($result);
+    $numOfUsers = mysqli_num_rows($result);
+    if($numOfUsers>0){      
       echo "Total Number Of Users Is : ".$numOfUsers;
-      echo "<table style='border:1px solid;'>
+      echo "<table id='datatable' class='table table-striped table-bordered'>
             <thead>
               <tr>
-                <th style='border:1px solid;'>User Name</th>
-                <th style='border:1px solid;'>Group Id</th>
+                <th>User Name</th>
+                <th>Group Id</th>
               </tr>
             </thead>
             <tbody>";
       for($i = 0 ; $i < $numOfUsers ; $i++){
         $userData = mysqli_fetch_assoc($result);
         echo "<tr>
-                <td style='border:1px solid;'>".$userData['user_name']."</td>
-                <td style='border:1px solid;'>".$userData['group_id']."</td>
+                <td>".$userData['user_name']."</td>
+                <td>".$userData['group_id']."</td>
               </tr>";
       }
       echo "</tbody>

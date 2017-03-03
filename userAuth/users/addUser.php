@@ -1,7 +1,13 @@
 <?php
+session_start();
+if(!isset($_SESSION['username'])){
+  header('Location: ../login.php');
+}
 error_reporting(E_ALL);
 ini_set('display_errors', true);
 ini_set('html_errors', true);
+include_once('../index.php');
+
  ?>
 <!DOCTYPE HTML>
   <html>
@@ -12,6 +18,18 @@ ini_set('html_errors', true);
       </style>
     </head>
   <body>
+  <div class="row">
+    <div class="col-md-8">
+    </div>
+    <div class="col-md-4" style="text-align: center">
+      <div>
+        <a class="btn btn-primary" href="addUser.php"> Add user </a>
+      </div>
+      <div>
+        <a class="btn btn-primary" href="usersearch.php"> Search user </a>
+      </div>
+    </div>
+  </div>
 
   <?php
     // define variables and set to empty values
@@ -87,16 +105,7 @@ ini_set('html_errors', true);
       //Insert Data into database
       if($errorFlag){
         extract($_POST);
-        include("dbloc.php");
-        include("dbrw.php");
-        include("dbro.php");
-        //mysqli_connect( [$host, $user, $password, $database, $port, $socket])
-        @$db = mysqli_connect($DBHost,$DBUserW,$DBUserWPass,$DBName);
-
-        if(mysqli_connect_errno()){
-          echo "Couldn't connect";
-          exit;
-        }
+        include ('../dbconnect.php');
         //password encryption...
         //$passWD = "";
         if($expDate == ""){
@@ -135,16 +144,7 @@ ini_set('html_errors', true);
     }
 
     function checkUserNameUnique($userName){
-      include("dbloc.php");
-      include("dbro.php");
-      $isUnique = true;
-      @$db = mysqli_connect($DBHost,$DBUserQ,$DBUserQPass,$DBName);
-
-      if(mysqli_connect_errno()){
-        echo "Couldn't connect to Select";
-        //echo $DBHost, $DBUserQ, $DBUserQPass, $DBName;
-        exit;
-      }
+      include ('../dbconnect.php');
       $sql = "select * from users where user_name like '$userName'";
       //echo $sql;
       //echo $userName;
@@ -159,15 +159,7 @@ ini_set('html_errors', true);
     }
 
     function getGroupsList(){
-      include("dbloc.php");
-      include("dbro.php");
-      @$db = mysqli_connect($DBHost,$DBUserQ,$DBUserQPass,$DBName);
-
-      if(mysqli_connect_errno()){
-        echo "Couldn't connect to Select";
-        //echo $DBHost, $DBUserQ, $DBUserQPass, $DBName;
-        exit;
-      }
+      include ('../dbconnect.php');
       $sql = "SELECT * FROM `groups`;";
       $result = mysqli_query($db, $sql);
       $rows = [];
@@ -225,48 +217,52 @@ ini_set('html_errors', true);
   <h2>Add User Form</h2>
   <p><span class="error">* required field.</span></p>
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-
-    <p><label for="fullName">Full Name: </label></p>
-    <input type="text" name="fullName" value="<?php echo $fullName;?>"/>
-    <span class="error">* <?php echo $fullNameErr;?></span>
-    <br>
-    <p><label for="userName">UserName: </label></p>
-    <input type="text" name="userName" value="<?php echo $userName;?>"/>
-    <span class="error">* <?php echo $userNameErr;?></span>
-    <br>
-    <p><label for="passWD">Password: </label></p>
-    <input type="password" name="passWD" value="<?php echo $passWD;?>"/>
-    <span class="error">* <?php echo $passWDErr;?></span>
-    <br>
-    <p><label for="rePassWD">Retype Password: </label></p>
-    <input type="password" name="rePassWD" value="<?php echo $rePassWD;?>"/>
-    <span class="error">* <?php echo $rePassWDErr;?></span>
-    <br>
-    <p><label for="expDate">Expiry Date (you may leave it blank): </label></p>
-    <input type="date" name="expDate" value="<?php echo $expDate;?>"/>
-    <br>
-    <p><label for="group">Group: </label></p>
-    <select name="group">
-      <?php
-        if ($groups == "" )
-          echo '<option "selected" value="0">No Groups Found!</option>';
-        else{
-          //echo '<option "selected" value="0"></option>';
-          foreach($groups as $group){
-            echo '<option ';
-            if($group["id"] == $insertGroup)
-              echo 'selected ';
-            echo 'value="'.$group["id"].'">'.$group["name"].'</option>';
+    <div class="form-group">
+      <p><label for="fullName">Full Name: </label></p>
+      <input class="form-control" type="text" name="fullName" value="<?php echo $fullName;?>"/>
+     <span class="error">* <?php echo $fullNameErr;?></span>
+    </div>
+    <div class="form-group">
+      <p><label for="userName">UserName: </label></p>
+      <input class="form-control" type="text" name="userName" value="<?php echo $userName;?>"/>
+      <span class="error">* <?php echo $userNameErr;?></span>
+    </div>
+    <div class="form-group">
+      <p><label for="passWD">Password: </label></p>
+      <input class="form-control" type="password" name="passWD" value="<?php echo $passWD;?>"/>
+      <span class="error">* <?php echo $passWDErr;?></span>
+    </div>
+    <div class="form-group">
+      <p><label for="rePassWD">Retype Password: </label></p>
+      <input class="form-control" type="password" name="rePassWD" value="<?php echo $rePassWD;?>"/>
+      <span class="error">* <?php echo $rePassWDErr;?></span>
+    </div>
+    <div class="form-group">
+      <p><label for="expDate">Expiry Date (you may leave it blank): </label></p>
+      <input class="form-control" type="date" name="expDate" value="<?php echo $expDate;?>"/>
+    </div>
+    <div class="form-group">
+      <p><label for="group">Group: </label></p>
+      <select class="form-control" name="group">
+        <?php
+          if ($groups == "" )
+            echo '<option "selected" value="0">No Groups Found!</option>';
+          else{
+            //echo '<option "selected" value="0"></option>';
+            foreach($groups as $group){
+              echo '<option ';
+              if($group["id"] == $insertGroup)
+                echo 'selected ';
+              echo 'value="'.$group["id"].'">'.$group["name"].'</option>';
+            }
           }
-        }
-        //echo $insertGroup;
-       ?>
-    </select>
-    <span class="error">* <?php echo $groupsErr;?></span>
-    <br>
-    <br>
-    <button id="reset" type="reset" value="cancel">Cancel</button>
-    <input type="submit" name="submit" value="Add User">
+          //echo $insertGroup;
+         ?>
+      </select>
+      <span class="error">* <?php echo $groupsErr;?></span>
+    </div>
+    <button class="btn btn-primary" id="reset" type="reset" value="cancel">Cancel</button>
+    <input  class="btn btn-primary" type="submit" name="submit" value="Add User">
   </form>
 
   </body>

@@ -1,61 +1,79 @@
-<html>
-  <title>Display all Users</title>
-  <body>
-    <table width=100%>
-      <tr>
-      	<td width=10%></td>
-        <td width=10%>ID</td>
-        <td width=30%>Full Name</td>
-        <td width=30%>User Name</td>
-        <td width=30%>Action</td>
 <?php
-  include("dbinfo.php");
- @ $database=mysqli_connect($DBHost,$DBUser,$DBuserp,$DBName);
-  if(mysqli_connect_error()){
-    echo "Unable To Connect";
-    exit;
-  }
+session_start();
+if(!isset($_SESSION['username'])){
+	header('Location: ../login.php');
+}
+ include ('../index.php');
+?>
+
+<div class="row">
+	<div class="col-md-8">
+	</div>
+	<div class="col-md-4" style="text-align: center">
+		<div>
+			<a class="btn btn-primary" href="addUser.php"> Add user </a>
+		</div>
+		<div>
+			<a class="btn btn-primary" href="usersearch.php"> Search user </a>
+		</div>
+	</div>
+</div>
+
+ <table id="datatable" class="table table-striped table-bordered" width=100%>
+	 <tr>
+	   
+		<td>ID</td>
+		<td>Full Name</td>
+		<td>User Name</td>
+		<td> Edit </td>
+		<td>Delete</td>
+		<td> Block/unblock </td>
+	</tr>
+<?php
+  include("../dbconnect.php");
   $query="select * from users";
-  $result=mysqli_query($database,$query);
+  $result=mysqli_query($db,$query);
   if(!$result){
     echo"Unable To Select";
     exit;
-}
-$num_of_rows=mysqli_num_rows($result);
+  }
+ $num_of_rows=mysqli_num_rows($result);
+
 for($i=0;$i<$num_of_rows;$i++){
-$res=mysqli_fetch_assoc($result);
-$id=$res['id'];
-?>
- <tr>
- 	<td><form action="" method="post">
-  <input type="checkbox" name="user" value="<?php echo $id ?>">
-</td>
-   <td width=10%><?=$res['id']?></td>
-   <td width=30%><?=$res['full_name']?></td>
-   <td width=30%><?=$res['user_name']?></td>
-   <td><input type="submit" name="delete" id="delete" value="delete" alt="delete"/></td>
-   <td><input type="submit" name="block" id="block" value="block" alt="block"/></td>
- </tr>
- <?php
- }
- echo "</table>";
- echo "<a href='../logout.php'>logout </a>";
- mysqli_close($database);
- ?>
+  $res=mysqli_fetch_assoc($result);
+	$id=$res['id'];
+	?>
+	 <tr>
+	   <td><?=$res['id']?></td>
+	   <td><?=$res['full_name']?></td>
+	   <td><?=$res['user_name']?></td>
+	   <td><a class="btn btn-warning" href="editUser.php?userID=<?= $res['id'] ?> "> Edit </a> </td>
+	   <td><a class="btn btn-danger" href="userdelete.php?id=<?= $res['id'] ?> "> delete</td>
+	   <?php 
+		if($res['is_blocked'] == 0) { ?>
+	   <td><a class="btn btn-danger" href="userblock.php?id=<?= $res['id'] ?> " >block</a></td>
+	   <?php
+		}
+		else {?>
+		 <td><a class="btn btn-success" href="userunblock.php?id=<?= $res['id'] ?> " > Unblock</a></td>
+	 	<?php } ?>
+	 </tr>
+	 <?php
+	 }
+	 echo "</table>";
+	 mysqli_close($db);
+	 ?>
 
- <?php
-if (isset($_POST['user'])) {
-include("dbinfo.php");
-@ $database=mysqli_connect($DBHost,$DBUser,$DBuserp,$DBName);
-if(mysqli_connect_error()){
-	echo "Unable To connect";
-	exit;
-}
-$sql="delete from users where id=".$_POST['user'];
-$result=mysqli_query($database,$sql);
-if(! $result){
-	echo "can't delete";
-	exit;
-}
+    </div>
+        </div>
+      </div>
 
-}?>
+
+
+
+<!-- /page content -->
+
+</div>
+</div>
+</div>
+

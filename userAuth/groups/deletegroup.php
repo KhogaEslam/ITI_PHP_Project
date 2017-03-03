@@ -1,5 +1,5 @@
 <?php
-include("dbconnect.php");
+include("../dbconnect.php");
 if (isset($_GET['id']) ) {
 	$id = $_GET['id'];
 	echo $id;
@@ -8,7 +8,9 @@ if (isset($_GET['id']) ) {
 	if ($result){
 		$sql_statement="delete from groups where id = $id;";
 		 mysqli_query( $db, $sql_statement);
-		 header('Location: index.php');
+		 include("logging.php");
+		 logging("3","group deleted successfully","deleted group");
+		 header('Location: allgroups.php');
 	}
 	else {
 		http_response_code(404);

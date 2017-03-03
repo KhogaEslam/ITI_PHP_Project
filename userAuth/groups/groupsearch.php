@@ -1,41 +1,56 @@
 <?php
-  session_start();
-  if(!isset($_SESSION['username'])){
-    header('Location: login.php');
-  }
+session_start();
+if(!isset($_SESSION['username'])){
+	header('Location: ../login.php');
+}
+  include_once('../index.php');
 ?>
+<div class="row">
+    <div class="col-md-8">
+      <?php
+        echo "No of records : " . $ro . " <br>";
+        ?>
+    </div>
+    <div class="col-md-4" style="text-align: center">
+      <div>
+        <a href="addgroup.php" class="btn btn-primary"> Add Group </a>
+      </div>
+      <div>
+      <a href="groupsearch.php" class="btn btn-primary"> Search group </a>
+      </div>
+    </div>
+  </div>
+
 <form class="" action="groupsearch.php" method="post">
-  <label for="Group Name">Group Name</label>
-  <input type="text" name="groupname" value="">
-  <button type="submit" name="button">Search</button>
+	<div class="form-group">
+	  	<label for="Group Name">Group Name</label>
+	  	<input class="form-control" type="text" name="groupname" value="">
+  	</div>
+  <button class="btn btn-primary" type="submit" name="button">Search</button>
 </form>
 <?php
 if($_POST['groupname']){
   $groupname = $_POST['groupname'];
-  echo $groupname;
-  $db = mysqli_connect( "localhost" , "root" , "root" , "authdb" );
-  if(mysqli_connect_errno($db)){
-    echo "error while connecting to db";
-    exit;
-  }else{
-    $query = "SELECT * FROM groups WHERE name LIKE '%$groupname%'";
-    $result = mysqli_query($db,$query);
-    if(isset($result)){
-      $numOfGroups = mysqli_num_rows($result);
+  //echo $groupname;
+  include("../dbconnect.php");
+   $query = "SELECT * FROM groups WHERE name LIKE '%$groupname%'";
+   $result = mysqli_query($db,$query);
+   $numOfGroups = mysqli_num_rows($result);
+    if($numOfGroups>0){
       echo "Total Number Of Groups Is : ".$numOfGroups;
-      echo "<table style='border:1px solid;'>
+      echo "<table id='datatable' class='table table-striped table-bordered' style='width: 100%'>
             <thead>
               <tr>
-                <th style='border:1px solid;'>Group Name</th>
-                <th style='border:1px solid;'>Project No</th>
+                <th>Group Name</th>
+                <th>Project No</th>
               </tr>
             </thead>
             <tbody>";
       for($i = 0 ; $i < $numOfGroups ; $i++){
         $groupData = mysqli_fetch_assoc($result);
         echo "<tr>
-                <td style='border:1px solid;'>".$groupData['name']."</td>
-                <td style='border:1px solid;'>".$groupData['proj_num']."</td>
+                <td>".$groupData['name']."</td>
+                <td>".$groupData['proj_num']."</td>
               </tr>";
       }
       echo "</tbody>
@@ -43,7 +58,7 @@ if($_POST['groupname']){
     }else{
       echo "No Data";
     }
-  }
+  
 }
 
 ?>

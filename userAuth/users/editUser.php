@@ -1,4 +1,11 @@
+
 <?php
+session_start();
+if(!isset($_SESSION['username'])){
+	header('Location: ../login.php');
+}
+ include ('../index.php');
+
 error_reporting(E_ALL);
 ini_set('display_errors', true);
 ini_set('html_errors', true);
@@ -12,23 +19,31 @@ ini_set('html_errors', true);
       </style>
     </head>
   <body>
-
+  	<div class="row">
+		<div class="col-md-8">
+		</div>
+		<div class="col-md-4" style="text-align: center">
+			<div>
+				<a class="btn btn-primary" href="addUser.php"> Add user </a>
+			</div>
+			<div>
+				<a class="btn btn-primary" href="usersearch.php"> Search user </a>
+			</div>
+		</div>
+	</div>
   <?php
     // define variables and set to empty values
     $fullNameErr = $userNameErr = $passWDErr = $rePassWDErr = $expDateErr = $groupsErr = "";
     $userID = $fullName = $userName = $passWD = $rePassWD = $expDate = $groups = $insertGroup = $encryptedPassWD = $currentPassWD = "";
-
     if(isset($_GET["userID"])){
       $userID = $_GET["userID"];
       //echo "$userID";
       getUserData($userID);
     }
-
     $groups = getGroupsList();
     if(!count($groups)>0){
       $groups = "";
     }
-
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $errorFlag = true;
       if (empty($_POST["fullName"])) {
@@ -42,7 +57,6 @@ ini_set('html_errors', true);
           $errorFlag = false;
         }
       }
-
       if (empty($_POST["userName"])) {
         $userNameErr = "User Name is required";
         $errorFlag = false;
@@ -59,7 +73,6 @@ ini_set('html_errors', true);
           $errorFlag = false;
         }*/
       }
-
       if (empty($_POST["passWD"])) {
         $encryptedPassWD = getPassword($userID);
       } else {
@@ -68,7 +81,6 @@ ini_set('html_errors', true);
         //password encryption...
         $encryptedPassWD = encryptPassword($passWD);
       }
-
       if (!empty($_POST["passWD"]) && empty($_POST["rePassWD"])) {
         $rePassWDErr = "Password Confirmation is required";
         $errorFlag = false;
@@ -81,36 +93,23 @@ ini_set('html_errors', true);
           $errorFlag = false;
         }
       }
-
       if (!empty($_POST["group"])){
         $insertGroup = $_POST["group"];
       }
-
       if (!empty($_POST["expDate"])){
         $expDate = $_POST["expDate"];
       }
-
       //Insert Data into database
       if($errorFlag){
         extract($_POST);
-        include("dbloc.php");
-        include("dbrw.php");
-        include("dbro.php");
-        include("dbu.php");
-        //mysqli_connect( [$host, $user, $password, $database, $port, $socket])
-        @$db = mysqli_connect($DBHost,$DBUserU,$DBUserUPass,$DBName);
+         include("../dbconnect.php");
 
-        if(mysqli_connect_errno()){
-          echo "Couldn't connect";
-          exit;
-        }
         //password encryption...
         //$passWD = "";
         $expDate1 = $expDate;
         if($expDate == ""){
           $expDate1 = "3000-01-01";
         }
-
         $encryptedPassWD = mysqli_real_escape_string($db, $encryptedPassWD);
         $sql = "UPDATE `users` SET `full_name`='$fullName',`user_name`='$userName',`password`='$encryptedPassWD',`exp_date`='$expDate1',`group_id`='$insertGroup' WHERE id = $userID;";
         //$sql = "insert into users (full_name, user_name, password, exp_date, group_id) values (\"$\", \"$\", \"$\", \"$\")";
@@ -137,25 +136,14 @@ ini_set('html_errors', true);
           mysqli_close($db);
       }
     }
-
     function test_input($data) {
       $data = trim($data);
       $data = stripslashes($data);
       $data = htmlspecialchars($data);
       return $data;
     }
-
     function checkUserNameUnique($userName){
-      include("dbloc.php");
-      include("dbro.php");
-      $isUnique = true;
-      @$db = mysqli_connect($DBHost,$DBUserQ,$DBUserQPass,$DBName);
-
-      if(mysqli_connect_errno()){
-        echo "Couldn't connect to Select";
-        //echo $DBHost, $DBUserQ, $DBUserQPass, $DBName;
-        exit;
-      }
+      include("../dbconnect.php");
       $sql = "select * from users where user_name like '$userName'";
       //echo $sql;
       //echo $userName;
@@ -168,17 +156,9 @@ ini_set('html_errors', true);
       mysqli_close($db);
       return $isUnique;
     }
-
     function getGroupsList(){
-      include("dbloc.php");
-      include("dbro.php");
-      @$db = mysqli_connect($DBHost,$DBUserQ,$DBUserQPass,$DBName);
+      include("../dbconnect.php");
 
-      if(mysqli_connect_errno()){
-        echo "Couldn't connect to Select";
-        //echo $DBHost, $DBUserQ, $DBUserQPass, $DBName;
-        exit;
-      }
       $sql = "SELECT * FROM `groups`;";
       $result = mysqli_query($db, $sql);
       $rows = [];
@@ -190,7 +170,6 @@ ini_set('html_errors', true);
       mysqli_close($db);
       return $rows;
     }
-
     function checkWeakPassword($passWD){
       global $passWDErr, $errorFlag;
       // check if password contains mixed chars and strong
@@ -198,52 +177,35 @@ ini_set('html_errors', true);
         $passWDErr = "Password too short!";
         $errorFlag = false;
       }
-
       if (strlen($passWD) > 25) {
         $passWDErr = "Password too long!";
         $errorFlag = false;
       }
-
       if (!preg_match("#[0-9]+#", $passWD)) {
           $passWDErr .= "<br>Password must include at least one number!";
           $errorFlag = false;
       }
-
       if (!preg_match("#[a-z]+#", $passWD)) {
           $passWDErr .= "<br>Password must include at least one letter!";
           $errorFlag = false;
       }
-
       if (!preg_match("#[A-Z]+#", $passWD)) {
           $passWDErr .= "<br>Password must include at least one upper letter!";
           $errorFlag = false;
       }
-
       if (!preg_match("#\W+#", $passWD)) {
           $passWDErr .= "<br>Password must include at least one special character!";
           $errorFlag = false;
       }
     }
-
     function encryptPassword($passWD){
       include("password.php");
       $hash = password_hash($passWD, PASSWORD_BCRYPT);
       return $hash;
-
     }
-
     function getUserData($userID){
       global $fullName, $userName, $expDate, $groups, $insertGroup, $currentPassWD ;
-      include("dbloc.php");
-      include("dbro.php");
-
-      @$db = mysqli_connect($DBHost,$DBUserQ,$DBUserQPass,$DBName);
-
-      if(mysqli_connect_errno()){
-        echo "Couldn't connect to Select";
-        //echo $DBHost, $DBUserQ, $DBUserQPass, $DBName;
-        exit;
-      }
+      include ('../dbconnect.php');
       $sql = "SELECT * FROM `users` where id = '$userID';";
       $result = mysqli_query($db, $sql);
       $row = mysqli_fetch_assoc($result);
@@ -261,17 +223,8 @@ ini_set('html_errors', true);
       $currentPassWD = $row["password"];
       mysqli_close($db);
     }
-
     function getPassword($userID){
-      include("dbloc.php");
-      include("dbro.php");
-
-      @$db = mysqli_connect($DBHost,$DBUserQ,$DBUserQPass,$DBName);
-
-      if(mysqli_connect_errno()){
-        echo "Couldn't connect to Select";
-        exit;
-      }
+      include("../dbconnect.php");
       $sql = "SELECT `password` FROM `users` where id = '$userID';";
       $result = mysqli_query($db, $sql);
       $row = mysqli_fetch_assoc($result);
@@ -284,49 +237,56 @@ ini_set('html_errors', true);
   <h2>Edit User Form</h2>
   <p><span class="error">* required field.</span></p>
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]."?userID=".$userID);?>">
-
-    <p><label for="fullName">Full Name: </label></p>
-    <input type="text" name="fullName" value="<?php echo $fullName;?>"/>
-    <span class="error">* <?php echo $fullNameErr;?></span>
-    <br>
-    <p><label for="userName">UserName: </label></p>
-    <input type="text" name="userName" value="<?php echo $userName;?>"/>
-    <span class="error">* <?php echo $userNameErr;?></span>
-    <br>
-    <p><label for="passWD">Password: </label></p>
-    <input type="password" name="passWD" value="<?php echo $passWD;?>"/>
-    <span class="error">* <?php echo $passWDErr;?></span>
-    <br>
-    <p><label for="rePassWD">Retype Password: </label></p>
-    <input type="password" name="rePassWD" value="<?php echo $rePassWD;?>"/>
-    <span class="error">* <?php echo $rePassWDErr;?></span>
-    <br>
-    <p><label for="expDate">Expiry Date (you may leave it blank): </label></p>
-    <input type="date" name="expDate" value="<?php echo $expDate;?>">
-    <br>
-    <p><label for="group">Group: </label></p>
-    <select name="group">
-      <?php
-        if ($groups == "" )
-          echo '<option "selected" value="0">No Groups Found!</option>';
-        else{
-          //echo '<option "selected" value="0"></option>';
-          foreach($groups as $group){
-            echo '<option ';
-            if($group["id"] == $insertGroup)
-              echo 'selected ';
-            echo 'value="'.htmlspecialchars((isset($group["id"]))?$group["id"]:0).'">'.$group["name"].'</option>';
-          }
-        }
-        echo $insertGroup;
-       ?>
-    </select>
+  	<div class="from-group">
+	    <p><label for="fullName">Full Name: </label></p>
+	    <input class="form-control" type="text" name="fullName" value="<?php echo $fullName;?>"/>
+	    <span class="error">* <?php echo $fullNameErr;?></span>
+    </div>
+    <div class="from-group">
+	    <p><label for="userName">UserName: </label></p>
+	    <input class="form-control" type="text" name="userName" value="<?php echo $userName;?>"/>
+	    <span class="error">* <?php echo $userNameErr;?></span>
+    </div>
+    <div class="form-group">
+	    <p><label for="passWD">Password: </label></p>
+	    <input type="password" name="passWD" value="<?php echo $passWD;?>"/>
+	    <span class="error">* <?php echo $passWDErr;?></span>
+    </div>
+    <div class="form-group">
+	    <p><label for="rePassWD">Retype Password: </label></p>
+	    <input class="form-control" type="password" name="rePassWD" value="<?php echo $rePassWD;?>"/>
+	    <span class="error">* <?php echo $rePassWDErr;?></span>
+    </div>
+    <div class="form-group">
+	    <p><label for="expDate">Expiry Date (you may leave it blank): </label></p>
+	    <input class="form-control" type="date" name="expDate" value="<?php echo $expDate;?>">
+	    <br>
+	    <p><label for="group">Group: </label></p>
+	</div>
+	<div class="form-group">
+	    <select name="group">
+	      <?php
+	        if ($groups == "" )
+	          echo '<option "selected" value="0">No Groups Found!</option>';
+	        else{
+	          //echo '<option "selected" value="0"></option>';
+	          foreach($groups as $group){
+	            echo '<option ';
+	            if($group["id"] == $insertGroup)
+	              echo 'selected ';
+	            echo 'value="'.htmlspecialchars((isset($group["id"]))?$group["id"]:0).'">'.$group["name"].'</option>';
+	          }
+	        }
+	        echo $insertGroup;
+	       ?>
+	    </select>
+	  </div>
     <span class="error">* <?php echo $groupsErr;?></span>
     <br>
     <input type="hidden" name="userID" value="<?php echo htmlspecialchars((isset($userID))?$userID:0); ?>" />
     <br>
-    <button id="reset" type="reset" value="cancel">Cancel</button>
-    <input type="submit" name="submit" value="Update User">
+    <button class="btn btn-primary" id="reset" type="reset" value="cancel">Cancel</button>
+    <input class="btn btn-primary" type="submit" name="submit" value="Update User">
   </form>
 
   </body>

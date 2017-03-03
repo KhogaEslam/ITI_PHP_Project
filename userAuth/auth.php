@@ -52,6 +52,8 @@
 				$callBack = goCallBack();
 				//echo "<br>".$_SESSION['username'] ."<br>". $_SESSION['groupname']."<br>".$_SESSION['projectNum'];
 				//echo "<a href='logout.php'>logout </a>";
+				include("logging.php");
+				logging("3","successfull login","login");
 			}
 			elseif($numOfRows==0){
 				header('Location: login.php?msg=User Name doesn\'t Exist ');

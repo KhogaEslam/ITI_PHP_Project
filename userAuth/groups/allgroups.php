@@ -1,5 +1,10 @@
 <?php
-	include_once('dbconnect.php');
+session_start();
+if(!isset($_SESSION['username'])){
+	header('Location: ../login.php');
+}
+	include_once('../index.php');
+	include_once('../dbconnect.php');
 	$query= "select * from groups";
 	$result = mysqli_query($db, $query);
 	if(! $result) {
@@ -7,13 +12,29 @@
 			 		exit;
 	}
 	$ro = mysqli_num_rows($result);
-	echo "You have" . $ro . "record <br>";
 	?>
-	<table>
+	<div class="row">
+		<div class="col-md-8">
+			<?php
+				echo "No of records : " . $ro . " <br>";
+				?>
+		</div>
+		<div class="col-md-4" style="text-align: center">
+			<div>
+				<a href="addgroup.php" class="btn btn-primary"> Add Group </a>
+			</div>
+			<div>
+			<a href="groupsearch.php" class="btn btn-primary"> Search group </a>
+			</div>
+		</div>
+	</div>
+	
+	<table id="datatable" class="table table-striped table-bordered"style="width: 100%" >
 	<tr>
 		<th>Name</th>
 		<th>Group Description</th>
 		<th>Project Number</th>
+		<th> Call back </th>
 		<th>Edit</th>
 		<th>Delete</th>
 	</tr>
@@ -25,6 +46,7 @@
 		<td> <?= $r['name']; ?> </td>
 		<td> <?= $r['group_desc']; ?> </td>
 		<td> <?= $r['proj_num']; ?> </td>
+		<td> <?= $r['callBack']; ?> </td>
 		<td> <a class="btn btn-primary" href="editgroup.php?id=<?= $r['id']; ?>" > Edit </a></td>
 		<td> <a class="btn btn-danger" href="deletegroup.php?id=<?= $r['id']; ?>"> Delete </a></td>
 	</tr>
