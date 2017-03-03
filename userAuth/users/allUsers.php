@@ -39,6 +39,7 @@ $id=$res['id'];
  <?php
  }
  echo "</table>";
+ echo "<a href='../logout.php'>logout </a>";
  mysqli_close($database);
  ?>
 

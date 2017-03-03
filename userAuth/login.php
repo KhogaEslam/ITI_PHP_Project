@@ -1,7 +1,8 @@
-<?php 
+<?php
 session_start();
 if(isset($_SESSION['username'])){
-	header('Location: form.html');
+	include("callBack.php");
+	$callBack = goCallBack();
 }
 ?>
 <html>
@@ -10,7 +11,13 @@ if(isset($_SESSION['username'])){
 			UserName<input type="text" name="username">
 			Password<input type="password" name="password">
 			<button type="submit">Login</button>
+			<p>
+				<?php
+					if($_GET["msg"]!=""){
+						echo $_GET['msg'];
+					}
+				?>
+			</p>
 		</form>
-
 	</body>
 </html>
