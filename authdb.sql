@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 01, 2017 at 09:10 PM
+-- Generation Time: Mar 03, 2017 at 08:43 PM
 -- Server version: 5.7.17-0ubuntu0.16.04.1
 -- PHP Version: 7.0.15-0ubuntu0.16.04.2
 
@@ -39,11 +39,12 @@ CREATE TABLE `groups` (
 --
 
 INSERT INTO `groups` (`id`, `name`, `group_desc`, `callBack`, `proj_num`) VALUES
-(1, 'superUser', 'Group 4 Super User', 'allUsers', 4),
-(2, 'projectAdmin', 'Group 4 Super User', 'projectUsers', 4),
-(3, 'powerUser', 'Group 1 User with All Privileges ', 'gp1', 1),
-(4, 'editManager', 'Group 1 user with create & update users privileges ', 'gp1', 1),
-(5, 'deleteManager', 'Group 1 user with delete users privileges ', 'gp1', 1);
+(1, 'superUser', 'Group 4 Super User', '/userAuth/users/allUsers.php', 4),
+(2, 'projectAdmin', 'Group 4 Project Admin', '/userAuth/users/projectUsers.php', 4),
+(3, 'powerUser', 'Group 1 User with All Privileges ', '/userManagment/index.php', 1),
+(4, 'editManager', 'Group 1 user with create & update users privileges ', '/userManagment/index.php', 1),
+(5, 'deleteManager', 'Group 1 user with delete users privileges ', '/userManagment/index.php', 1),
+(6, 'serverAdmin', 'Group 2 user All privileges ', '/ApacheConf/index.php', 2);
 
 -- --------------------------------------------------------
 
@@ -66,7 +67,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `full_name`, `user_name`, `password`, `exp_date`, `group_id`, `is_blocked`) VALUES
-(2, 'Eslam Gamal Khoga', 'khoga1', '$2y$10$hFNKfetKThQWQRBwzg/GROZrt2CElnTVtQ9mJb0zlBMTc8QW3Y6OK', '3000-01-01', 1, 0);
+(2, 'Eslam Gamal Khoga', 'khoga1', '$2y$10$K3UfSWHVl1tVy8rXzdCFe.54ht5XmSccyjRdWTtZSlakxtPwqbGry', '3000-01-01', 1, 0),
+(3, 'Mohamed Magdy', 'Magdy', '$2y$10$F2ZQT28r4TMcl6eYgHfC3OSGESowori9qntWIPE5pLZQAQklsLiRq', '3000-01-01', 1, 0),
+(4, 'Mohamed Magdy', 'Magdy1', '$2y$10$Qz5XHZs7FpMAMxwACk94cu6um3sUWFEUjcjBJ20xzK4hBbH7.fF0i', '3000-01-09', 1, 0),
+(6, 'Anas Ahmed', 'anas', '$2y$10$K3UfSWHVl1tVy8rXzdCFe.54ht5XmSccyjRdWTtZSlakxtPwqbGry', '2017-01-01', 1, 0);
 
 --
 -- Indexes for dumped tables
@@ -93,12 +97,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- Constraints for dumped tables
 --
