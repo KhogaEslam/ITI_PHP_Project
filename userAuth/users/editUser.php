@@ -129,7 +129,7 @@ ini_set('html_errors', true);
  ?>
           <script>
             alert("Done!");
-            location.href="#";
+            location.href="allUsers.php";
           </script>
 <?php
         }
