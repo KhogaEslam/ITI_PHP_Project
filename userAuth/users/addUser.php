@@ -3,9 +3,9 @@ session_start();
 if(!isset($_SESSION['username'])){
   header('Location: ../login.php');
 }
-error_reporting(E_ALL);
-ini_set('display_errors', true);
-ini_set('html_errors', true);
+//error_reporting(E_ALL);
+//ini_set('display_errors', true);
+//ini_set('html_errors', true);
 include_once('../index.php');
 
  ?>
@@ -128,7 +128,7 @@ include_once('../index.php');
  ?>
           <script>
             alert("Done!");
-            location.href="#";
+            location.href="allUsers.php";
           </script>
 <?php
         }
@@ -145,6 +145,7 @@ include_once('../index.php');
 
     function checkUserNameUnique($userName){
       include ('../dbconnect.php');
+      $isUnique = true;
       $sql = "select * from users where user_name like '$userName'";
       //echo $sql;
       //echo $userName;

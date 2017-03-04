@@ -74,6 +74,7 @@ if(!isset($_SESSION['username'])){
                 <ul class="nav side-menu">
                   <li><a  href="/userAuth/users/allUsers.php"><i class="fa fa-user"></i> Users</a>
                   <li><a href= "/userAuth/groups/allgroups.php" ><i class="fa fa-thumb-tack"></i> Groups </a></li>
+                  <li><a href= "/Logging/index.php" ><i class="fa fa-thumb-tack"></i> History </a></li>
                 </ul>
               </div>
 
