@@ -87,7 +87,11 @@ Log any event from any team to a mysql database.
 		
 		20-Mark every message with a team identifier, so we can list only a certain team messages
 		
-		30-Categorize the messages into (alert,critical) based on how the message is critical. The source of the log 	                    message will send the message along with its category
+		30-Categorize the messages into (alert,critical) based on how the message is critical. 
+		
+		The source of the log 	                    
+		
+			message will send the message along with its category
 		
 		40-Design a different levels of filters on the messages to close the search.
 		
