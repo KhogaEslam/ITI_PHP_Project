@@ -1,9 +1,9 @@
 <?php
 include 'head.html';
 session_start();
-$_SESSION['username']='ss';
-$_SESSION['groupname']='serverAdmin';
-$_SESSION['projectNum']=2;
+//$_SESSION['username']='ss';
+//$_SESSION['groupname']='serverAdmin';
+//$_SESSION['projectNum']=2;
 if ($_SESSION['groupname'] == 'serverAdmin')
 {
 //----------------------------------------
@@ -45,7 +45,7 @@ if (! isset($_POST['ServerName'])) {
             </div> -->
             <div class="checkbox">
                 <label for="php">
-                    <input type="checkbox"> Check to enable PHP scripting.
+                    <input type="checkbox"  name='php' checked > Check to enable PHP scripting.
                 </label>
             </div>
             <div class="form-group">
@@ -58,18 +58,21 @@ if (! isset($_POST['ServerName'])) {
 <?php
 } else {
     $php_flag = extract($_POST);
-    //-------------------------------------
-        $filename=$ServerName;
-        $str=str_replace('.',"_",$filename);
-    //---------------------------------------
-    if (! is_dir($ErrorLog) && ! is_dir($CustomLog)) {
-        header("location: new.php?err&cust");
-    } elseif (! is_dir($ErrorLog)) {
-        header("location: new.php?err");
-    } elseif (! is_dir($CustomLog)) {
-        header("location: new.php?cust");
+
+    $errTmp = explode("/", $ErrorLog);
+    $custTmp = explode("/", $CustomLog);
+    unset($errTmp[count($errTmp)-1]);
+    $errTmp = implode("/", $errTmp);
+    unset($custTmp[count($custTmp)-1]);
+    $custTmp = implode("/", $custTmp);
+    if ((! is_dir($errTmp) && ! is_dir($custTmp)) || (is_dir($ErrorLog) && is_dir($CustomLog))) {
+        header("location: edit.php?err&cust&f=$oldfile");
+    } elseif (! is_dir($errTmp) || is_dir($ErrorLog)) {
+        header("location: edit.php?err&f=$oldfile");
+    } elseif (! is_dir($custTmp) || is_dir($CustomLog)) {
+        header("location: edit.php?cust&f=$oldfile");
     } else {
-        $virtualHostFile = fopen("/etc/apache2/sites-enabled/".$str.'.conf', 'w');
+        $virtualHostFile = fopen("/etc/apache2/sites-enabled/".$ServerName.'.conf', 'w');
         if ( $virtualHostFile) {
             $part1 = "<VirtualHost *:80\>\nServerName $ServerName\nServerAdmin $ServerAdmin\nDocumentRoot $DocumentRoot\nErrorLog $ErrorLog\nCustomLog $CustomLog combined\nphp_admin_flag engine ";
             $part2 = ($php_flag == 5) ? "off\n</VirtualHost>\n" : "on\n</VirtualHost>\n" ;

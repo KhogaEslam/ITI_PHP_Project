@@ -18,18 +18,6 @@ include_once('../index.php');
       </style>
     </head>
   <body>
-  <div class="row">
-    <div class="col-md-8">
-    </div>
-    <div class="col-md-4" style="text-align: center">
-      <div>
-        <a class="btn btn-primary" href="addUser.php"> Add user </a>
-      </div>
-      <div>
-        <a class="btn btn-primary" href="usersearch.php"> Search user </a>
-      </div>
-    </div>
-  </div>
 
   <?php
     // define variables and set to empty values
@@ -125,6 +113,8 @@ include_once('../index.php');
         }
         else{
           //redirect to main page
+          include("../logging.php");
+          logging("3","User Added ".$userName." Successfully","Adding User");
  ?>
           <script>
             alert("Done!");

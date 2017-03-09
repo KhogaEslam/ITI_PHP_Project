@@ -1,5 +1,5 @@
-<?php 
-session_start();
+<?php
+//session_start();
 ?>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -20,14 +20,14 @@ session_start();
                     <li class="active"><a href="index.php">Home <span class="sr-only">(current)</span></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-			<?php 
+			<?php
 				if ($_SESSION['groupname'] == 'serverAdmin')
-				{ 
+				{
 					echo "<li><a href='../userAuth/logout.php'>Logout</a></li>";
 				}
 				else{
-                    			echo "<li><a href='../userAuth/login.php'>Login</a></li>";					
-					}
+          echo "<li><a href='../userAuth/login.php'>Login</a></li>";
+				}
 			?>
 
                 </ul>

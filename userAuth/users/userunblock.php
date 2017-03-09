@@ -12,6 +12,8 @@ if (isset($_GET['id']) ) {
 	if ($result){
 		$sql_statement="update users set is_blocked= 0 where id= $id;";
 		 mysqli_query( $db, $sql_statement);
+		 include("../logging.php");
+ 		infolog("User ".$_SESSION['username']."Un-Blocked a user Successfully","Un-Blocked User");
 		 header('Location: allUsers.php');
 	}
 	else {

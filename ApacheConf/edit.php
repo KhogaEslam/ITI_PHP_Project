@@ -2,9 +2,6 @@
 
 include 'head.html';
 session_start();
-$_SESSION['username']='ss';
-$_SESSION['groupname']='serverAdmin';
-$_SESSION['projectNum']=2;
 if ($_SESSION['groupname'] == 'serverAdmin')
 {
 //----------------------------------------
@@ -85,10 +82,7 @@ if (! isset($_POST['ServerName'])) {
 <?php
 } else {
     $php_flag = extract($_POST);
-    //-------------------------------------
-        $filename=$ServerName;
-        $str=str_replace('.',"_",$filename);
-    //---------------------------------------
+
     $errTmp = explode("/", $ErrorLog);
     $custTmp = explode("/", $CustomLog);
     unset($errTmp[count($errTmp)-1]);

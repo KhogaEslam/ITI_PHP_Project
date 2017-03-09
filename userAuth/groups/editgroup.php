@@ -13,20 +13,8 @@
 			$r = mysqli_fetch_assoc($result);
 			if (! isset($_POST['group_name'])) {
 			?>
-			<div class="row">
-				<div class="col-md-8">
+			
 
-				</div>
-				<div class="col-md-4" style="text-align: center">
-					<div>
-						<a href="addgroup.php" class="btn btn-primary"> Add Group </a>
-					</div>
-					<div>
-					<a href="groupsearch.php" class="btn btn-primary"> Search group </a>
-					</div>
-				</div>
-			</div>
-	
 			<form id="form" method = 'post'>
 				<div class="form-group">
 					<label>
@@ -49,7 +37,14 @@
 					<label>
 						Project Number
 					</label>
-					<input class="form-control" id= "group-proj-num" name= 'group_proj_num' type = 'text' value = "<?= $r['proj_num'] ?>" >
+					<select class="form-control" type="number" name="group_proj_num" id="group-proj-num" placeholder="add project number">
+            <option value="1" <?php if($r['proj_num'] == 1) echo "selected" ; ?> >1</option>
+            <option value="2" <?php if($r['proj_num'] == 2) echo "selected" ; ?> >2</option>
+            <option value="3" <?php if($r['proj_num'] == 3) echo "selected" ; ?> >3</option>
+            <option value="4" <?php if($r['proj_num'] == 4) echo "selected" ; ?> >4</option>
+            <option value="5" <?php if($r['proj_num'] == 5) echo "selected" ; ?> >5</option>
+          </select>
+
 				<input id="submit-btn" class="btn btn-primary" type="button" value ="submit">
 			</form>
 			<script>
@@ -60,7 +55,7 @@
 		         if ( groupName.value ) {
 		           if( callBack.value) {
 		             if (projNum.value) {
-		                   
+
 		                   document.getElementById('form').submit();
 		                }
 		             else {
@@ -74,24 +69,26 @@
 		         else {
 		               alert("One or more fields are empty !! " );
 		         }
-		       
-		  
+
+
 
 		     });
 
    </script>
-		<?php 
+		<?php
 	} else {
 			extract($_POST);
 			$sql_statement="update groups set name= '$group_name', group_desc='$group_desc' , callBack='$callBack' , proj_num = $group_proj_num where id = $id;";
 			//echo $sql_statement;
 		     mysqli_query($db, $sql_statement);
+				 include("../logging.php");
+	       logging("3","Group Edited ".$group_name." Successfully","Editing Group");
 		     ?>
 		     <script>
 		     	location.href="allgroups.php";
 		     </script>
 
-		
+
 <?php
 		}
 	}

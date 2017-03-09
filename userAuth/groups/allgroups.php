@@ -13,22 +13,15 @@ if(!isset($_SESSION['username'])){
 	}
 	$ro = mysqli_num_rows($result);
 	?>
-	<div class="row">
-		<div class="col-md-8">
-			<?php
-				echo "No of records : " . $ro . " <br>";
-				?>
-		</div>
-		<div class="col-md-4" style="text-align: center">
-			<div>
-				<a href="addgroup.php" class="btn btn-primary"> Add Group </a>
-			</div>
-			<div>
-			<a href="groupsearch.php" class="btn btn-primary"> Search group </a>
-			</div>
-		</div>
+	<div class="btn-group">
+			<button type="button" class="btn btn-default">
+				<a class="btn btn-primary" href="addgroup.php"> Add Group </a>
+			</button>
+			<button type="button" class="btn btn-default">
+				<a class="btn btn-primary" href="groupsearch.php"> Search group </a>
+			</button>
 	</div>
-	
+
 	<table id="datatable" class="table table-striped table-bordered"style="width: 100%" >
 	<tr>
 		<th>Name</th>
@@ -50,7 +43,7 @@ if(!isset($_SESSION['username'])){
 		<td> <a class="btn btn-primary" href="editgroup.php?id=<?= $r['id']; ?>" > Edit </a></td>
 		<td> <a class="btn btn-danger" href="deletegroup.php?id=<?= $r['id']; ?>"> Delete </a></td>
 	</tr>
-	<?php 
-		} 
+	<?php
+		}
 		echo "</table>";
 ?>

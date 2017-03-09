@@ -29,7 +29,13 @@ if (!isset($_POST['group_name']) ) {
         </div>
         <div class="form-group">
         	<label> Project Number </label>
-        	<input  class="form-control" type="number" name="group_proj_num" id="group-proj-num" placeholder="add project number">
+          <select class="form-control" type="number" name="group_proj_num" id="group-proj-num" placeholder="add project number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
         <input id="submit-btn" class="btn btn-primary" type="button" value ="submit">
 
@@ -43,19 +49,19 @@ if (!isset($_POST['group_name']) ) {
          if ( groupName.value ) {
            if( callBack.value) {
              if (projNum.value) {
-                   
+
                    document.getElementById('form').submit();
                 }
          }
          else {
-              alert("One or more fDEWGields are empty !! " );
+              alert("One or more fields are empty !! " );
          }
        }
          else {
-               alert("One or morWEGWE[4JW0Oe fields are empty !! " );
+               alert("One or more fields are empty !! " );
          }
-       
-  
+
+
 
      });
 
@@ -68,7 +74,7 @@ if (!isset($_POST['group_name']) ) {
    include("../dbconnect.php");
    $sql_statement="insert into groups(name,group_desc,callBack, proj_num) values (\" $group_name \",
     \"$group_desc\", \"$callBack\", \"$group_proj_num\");";
-    echo $sql_statement;
+    //echo $sql_statement;
     $result = mysqli_query( $db, $sql_statement);
     if (! $result ) {
       echo "can't insert";
@@ -78,7 +84,7 @@ if (!isset($_POST['group_name']) ) {
       ?>
       <script>
       alert("Done");
-      location.href="addgroup.php"
+      location.href="allgroups.php"
       </script>
       <?php
       include("../logging.php");

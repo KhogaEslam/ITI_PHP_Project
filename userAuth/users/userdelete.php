@@ -12,6 +12,8 @@ if (isset($_GET['id']) ) {
 	if ($result){
 		$sql_statement="delete from users where id = $id;";
 		 mysqli_query( $db, $sql_statement);
+		 include("../logging.php");
+ 		logging("3","User ".$_SESSION['username']."Deleted a user Successfully","Deleted User");
 		 header('Location: allUsers.php');
 	}
 	else {

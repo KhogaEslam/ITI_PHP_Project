@@ -6,28 +6,25 @@ if(!isset($_SESSION['username'])){
  include ('../index.php');
 ?>
 
-<div class="row">
-	<div class="col-md-8">
-	</div>
-	<div class="col-md-4" style="text-align: center">
-		<div>
+<div class="btn-group">
+		<button type="button" class="btn btn-default">
 			<a class="btn btn-primary" href="addUser.php"> Add user </a>
-		</div>
-		<div>
+		</button>
+		<button type="button" class="btn btn-default">
 			<a class="btn btn-primary" href="usersearch.php"> Search user </a>
-		</div>
-	</div>
+		</button>
 </div>
+<br>
 
- <table id="datatable" class="table table-striped table-bordered" width=100%>
+ <table id="datatable" class="table" width=100%>
 	 <tr>
-	   
-		<td>ID</td>
-		<td>Full Name</td>
-		<td>User Name</td>
-		<td> Edit </td>
-		<td>Delete</td>
-		<td> Block/unblock </td>
+		<th>Name</th>
+		<th>User Name</th>
+		<th>Group Name</th>
+		<th>Expiry Date</th>
+		<th>Edit</th>
+		<th>Delete</th>
+		<th>Block/unblock</th>
 	</tr>
 <?php
   include("../dbconnect.php");
@@ -44,12 +41,18 @@ for($i=0;$i<$num_of_rows;$i++){
 	$id=$res['id'];
 	?>
 	 <tr>
-	   <td><?=$res['id']?></td>
 	   <td><?=$res['full_name']?></td>
 	   <td><?=$res['user_name']?></td>
+		 <?php
+		 		$queryGroup="select * from groups where id = ".$res['group_id'];
+				$resultGroup=mysqli_query($db,$queryGroup);
+				$resGroup=mysqli_fetch_assoc($resultGroup);
+		  ?>
+		 <td><?=$resGroup['name']?></td>
+		 <td><?=$res['exp_date']?></td>
 	   <td><a class="btn btn-warning" href="editUser.php?userID=<?= $res['id'] ?> "> Edit </a> </td>
 	   <td><a class="btn btn-danger" href="userdelete.php?id=<?= $res['id'] ?> "> delete</td>
-	   <?php 
+	   <?php
 		if($res['is_blocked'] == 0) { ?>
 	   <td><a class="btn btn-danger" href="userblock.php?id=<?= $res['id'] ?> " >block</a></td>
 	   <?php
@@ -76,4 +79,3 @@ for($i=0;$i<$num_of_rows;$i++){
 </div>
 </div>
 </div>
-

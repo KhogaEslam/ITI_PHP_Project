@@ -126,6 +126,8 @@ ini_set('html_errors', true);
         }
         else{
           //redirect to main page
+					include("../logging.php");
+          logging("3","User Edited ".$userName." Successfully","Editing User");
  ?>
           <script>
             alert("Done!");

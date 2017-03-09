@@ -28,7 +28,8 @@ if (isset($_POST['del']) )
 {
   foreach ($files as $file)
   {
-    if (trim($_POST[$file]) == 'on')
+    $str=str_replace('.',"_",$file);
+    if (trim($_POST[$str]) == 'on')
     {
         if (unlink("/etc/apache2/sites-enabled/".$file.'.conf'))
         {
