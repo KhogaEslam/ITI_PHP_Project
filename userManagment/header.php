@@ -1,5 +1,4 @@
 	<?php
-		$admin = 'poweruser';
 		echo <<<EOL
 		<nav class=" navbar-inverse" style='margin-bottom: 0'>
   <div class="container-fluid">
@@ -23,19 +22,21 @@ EOL;
 		}
 		echo <<<EOL
 		<li><a href="groups.php">Manage groups</a></li>
+EOL;
+if (isset($_SESSION['groupname']))
+{
+	echo "<li ><a class='pull-right' href='log/index.php'>View Logs</a></li>";
+	echo "<li ><a class='pull-right' href='../userAuth/logout.php'>Logout</a></li>";
+}
+else{
+									echo "<li><a href='../userAuth/login.php'>Login</a></li>";
+	}
+	echo<<<EOL
+
       </ul>
 
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 EOL;
-		?>
-		<?php
-			if (isset($_SESSION['groupname']))
-			{
-				echo "<li><a href='../userAuth/logout.php'>Logout</a></li>";
-			}
-			else{
-												echo "<li><a href='../userAuth/login.php'>Login</a></li>";
-				}
 		?>

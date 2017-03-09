@@ -1,5 +1,6 @@
 <?php
 session_start();
+include('check_request.php');
 $username=$_SESSION['login']=$_POST['username'];
 $line=explode(":", exec('grep '.$username.' /etc/passwd'));
 //print_r($line);
@@ -15,7 +16,6 @@ $default_shell=$_SESSION['default_shell']=$line[6];
 //add back button
 
 $remote_group = $_SESSION['groupname'];
-$remote_group = "poweruser";
 $remote_user =$_SESSION['username'];
 
 ?>
@@ -78,7 +78,7 @@ $remote_user =$_SESSION['username'];
 				<div class="col-md-1">
 
 						<?php
-				
+
 						 if($remote_group == "poweruser" || $remote_group == "delete_manager") { ?>
 						<form class="" action="deleteuser.php" method="post">
 								<input type="hidden" name="remote_group" value="<?= $remote_group ?>">

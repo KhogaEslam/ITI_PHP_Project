@@ -1,7 +1,7 @@
 <?php
 session_start();
-$admin = "poweruser";
-$user = "nothing";
+$admin =  $_SESSION['groupname'];
+$user = $_SESSION['username'] ;
 // $_SESSION['groupname'] = $admin;
 // $_SESSION['username'] = $user;
 // $_SESSION['projectNum'] = 1;

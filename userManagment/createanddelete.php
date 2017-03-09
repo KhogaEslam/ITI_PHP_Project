@@ -1,7 +1,10 @@
 
 <?php
   session_start();
+  include('check_request.php');
   include_once "log/LogsFunctions.php";
+  if(isset($_SESSION['groupname']) &&$_SESSION['groupname']=="poweruser" ||$_SESSION['groupname']=="edit_manager") {
+
 
 $show_shell=explode(PHP_EOL, shell_exec('cat /etc/shells'));
 $shell_len=count($show_shell) -1;
@@ -77,7 +80,7 @@ function check(){
          var password = document.getElementById("txtPassword").value;
          var confirmPassword = document.getElementById("txtConfirmPassword").value;
          if (password != confirmPassword) {
-			document.querySelector("#mismatch").innerHTML = "Password mismatch please re-enter password";             
+			document.querySelector("#mismatch").innerHTML = "Password mismatch please re-enter password";
 			return false;
          }
          return true;
@@ -92,8 +95,8 @@ function check(){
       if($code != 0) {
         ?>
         <h3 class='text-danger'> <?php if($code != 0) { ?> Error occured please check <a target='_blank' href="http://www.google.com/?q=exit+error+<?=$code?>+bash">Google search</a> <?php } ?></h3>
-		<h3 class="text-danger" id='mismatch'></h3>		
-		<h3 class="text-danger" id='invalidinput'></h3>        
+		<h3 class="text-danger" id='mismatch'></h3>
+		<h3 class="text-danger" id='invalidinput'></h3>
 		<?php
       }
     ?>
@@ -152,3 +155,13 @@ function check(){
 
 </body>
 </html>
+<?php
+}
+else {
+  http_response_code(403);
+  echo "<h1> Access Forbidden </h1>";
+
+
+}
+
+?>

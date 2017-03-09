@@ -1,9 +1,7 @@
 <?php
 session_start();
-//include('check_request.php');
-// $_SESSION['username'] = "Logger";
-// $_SESSION['groupname'] = "Group1";
-// $_SESSION['projectNum'] = "1";
+require("./log/LogsFunctions.php");
+if(isset($_SESSION['groupname']) &&$_SESSION['groupname']=="poweruser" ||$_SESSION['groupname']=="edit_manager") {
 
 extract($_SESSION);
 ?>
@@ -16,14 +14,14 @@ extract($_SESSION);
     </head>
     <body>
         <?php
+        $user = $_SESSION['username'];
+        $admin = $_SESSION['groupname'];
+
         include 'header.php';
-        require("./log/LogsFunctions.php");
         $show_shell = explode(PHP_EOL, shell_exec('cat /etc/shells'));
         $shell_len = count($show_shell) - 1;
         $show_group = explode(PHP_EOL, shell_exec('cat /etc/group|cut -d: -f1'));
         array_pop($show_group);
-//        $remote_user = $_SESSION['username'];
-//        $remote_group = $_SESSION['groupname'];
 
         $exec_string = "";
         $success_str = "";
@@ -52,7 +50,7 @@ extract($_SESSION);
                 else{
                     errlog("Error '".$_POST['uid']."' is not a valid user id.");
                 }
-                
+
             }
             if (!empty($_POST['shell'])) {
                 $shell = $_POST['shell'];
@@ -73,7 +71,7 @@ extract($_SESSION);
                 $prigroup = $_POST['prigroup'];
                 $exec_string .= "-g '" . $prigroup . "' ";
             }
-//            
+//
             $exec_string = $str_prefix . $exec_string . $str_suffix;
             exec($exec_string, $out, $code);
             if ($code == 0) {
@@ -165,3 +163,15 @@ extract($_SESSION);
         </div>
     </body>
 </html>
+<?php
+}
+else {
+  http_response_code(403);
+  echo "<h1> Access Forbidden </h1>";
+  echo "Please click <a href='index.php'>here</a> to return to home page";
+
+
+
+}
+
+?>

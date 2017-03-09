@@ -1,14 +1,14 @@
 <?php
 session_start();
-  include_once "log/LogsFunctions.php";
-  include('check_request.php');
-  
+include_once "log/LogsFunctions.php";
+  //include('check_request.phpt');
+if(isset($_SESSION['groupname']) &&$_SESSION['groupname']=="poweruser" ||$_SESSION['groupname']=="edit_manager") {
   $group_name= $_POST['group_name'];
-  
-  $admin= $_SESSION['groupname']
+
+  $admin= $_SESSION['groupname'];
   $user=$_SESSION['username'];
-  
-  if(isset($_POST['create_group'])){
+
+
   exec("sudo groupadd '$group_name'",$output,$ret);
   if($ret==0){
           infolog("Successfully added group to the system Success", "Success");
@@ -17,10 +17,10 @@ session_start();
         else
             {
               errlog("Error  unable to create group");
-        
- 
+
+
   }
-}
+
 ?>
 <html>
 <head>
@@ -59,3 +59,10 @@ session_start();
   </body>
 
 </html>
+<?php }
+else {
+  http_response_code(403);
+  echo "<h1> Access Forbidden </h1>";
+}
+
+ ?>

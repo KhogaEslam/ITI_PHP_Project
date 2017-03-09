@@ -1,8 +1,10 @@
 <?php
+session_start();
+
 include('check_request.php');
 include_once "log/LogsFunctions.php";
+if(isset($_SESSION['groupname']) &&$_SESSION['groupname']=="poweruser" ||$_SESSION['groupname']=="edit_manager") {
 
-session_start();
 $old_gName= $_POST['group_name'];
 $remote_group = $_POST['remote_group'];
 $remote_user = $_POST['remote_user'];
@@ -67,3 +69,14 @@ if(isset($_POST['edit']) && isset($_POST['group_name_f'])){
     </div>
     </body>
 </html>
+<?php
+}
+else {
+  http_response_code(403);
+  echo "<h1> Access Forbidden </h1>";
+  echo "Please click <a href='index.php'>here</a> to return to home page";
+
+
+
+}
+ ?>
