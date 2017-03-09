@@ -70,6 +70,17 @@ if (!isset($_POST['group_name']) ) {
  <?php
 }
  else {
+   function secure_input($data) {
+     $data = trim($data);
+     $data = stripslashes($data);
+     $data = htmlspecialchars($data);
+     return $data;
+   }
+   $_POST['group_name'] = secure_input($_POST['group_name']);
+   $_POST['group_desc'] = secure_input($_POST['group_desc']);
+   $_POST['callBack'] = secure_input($_POST['callBack']);
+   $_POST['group_proj_num'] = secure_input($_POST['group_proj_num']);
+
    extract($_POST);
    include("../dbconnect.php");
    $sql_statement="insert into groups(name,group_desc,callBack, proj_num) values (\" $group_name \",

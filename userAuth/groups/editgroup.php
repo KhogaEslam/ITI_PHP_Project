@@ -13,7 +13,7 @@
 			$r = mysqli_fetch_assoc($result);
 			if (! isset($_POST['group_name'])) {
 			?>
-			
+
 
 			<form id="form" method = 'post'>
 				<div class="form-group">
@@ -77,6 +77,16 @@
    </script>
 		<?php
 	} else {
+			function secure_input($data) {
+				$data = trim($data);
+				$data = stripslashes($data);
+				$data = htmlspecialchars($data);
+				return $data;
+			}
+			$_POST['group_name'] = secure_input($_POST['group_name']);
+			$_POST['group_desc'] = secure_input($_POST['group_desc']);
+			$_POST['callBack'] = secure_input($_POST['callBack']);
+			$_POST['group_proj_num'] = secure_input($_POST['group_proj_num']);
 			extract($_POST);
 			$sql_statement="update groups set name= '$group_name', group_desc='$group_desc' , callBack='$callBack' , proj_num = $group_proj_num where id = $id;";
 			//echo $sql_statement;
@@ -94,6 +104,8 @@
 	}
 	else {
 		http_response_code(404);
+		include("../logging.php");
+		logging("3","Group Added ".$group_name." Un-Successfully","Editing Group");
 		exit();
 	}
 }
