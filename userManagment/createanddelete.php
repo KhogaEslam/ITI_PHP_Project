@@ -1,7 +1,7 @@
 
 <?php
   session_start();
-  include('check_request.php');
+  //include('check_request.php');
   include_once "log/LogsFunctions.php";
   if(isset($_SESSION['groupname']) &&$_SESSION['groupname']=="poweruser" ||$_SESSION['groupname']=="edit_manager") {
 
